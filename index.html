@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#07131d" />
+    <title>Pixel Fractal Aquarium</title>
+  </head>
+  <body>
+    <div id="app">
+      <a class="skip-link" href="#aquarium-canvas">跳到水族箱画布</a>
+      <canvas id="aquarium-canvas" tabindex="0" role="img" aria-label="像素分形水族箱画布，可用空格暂停、R 键重置"></canvas>
+      <header class="topbar">
+        <div class="brand-lockup">
+          <span class="brand-mark">PF</span>
+          <div>
+            <p class="brand-name">Pixel Fractal Aquarium</p>
+            <p class="brand-subtitle">GENOME / AQUATIC STUDY 01</p>
+          </div>
+        </div>
+        <div class="topbar-readouts">
+          <span class="readout"><i class="readout-dot"></i><span id="runtime-state">RUNNING</span></span>
+          <span class="readout"><span id="fps-readout">60</span> FPS</span>
+          <span id="performance-state" class="readout performance-state" role="status" aria-live="polite">GPU NOMINAL</span>
+        </div>
+      </header>
+
+      <div id="event-feedback" class="event-feedback" role="status" aria-live="polite">
+        <i class="event-feedback-dot"></i><span id="event-feedback-text"></span>
+      </div>
+
+      <aside class="control-panel" aria-labelledby="control-title">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">LIVE PARAMETERS</p>
+            <h1 id="control-title">Genome console</h1>
+          </div>
+          <span class="panel-index">01 / 05</span>
+        </div>
+
+        <section class="control-section">
+          <div class="section-title"><span>Fractal coordinates</span><span class="section-code">C-AXIS</span></div>
+          <label class="range-control">
+            <span><span>c real</span><output id="cx-value">-0.745</output></span>
+            <input id="cx-input" type="range" min="-1.4" max="0.4" step="0.001" value="-0.745" />
+          </label>
+          <label class="range-control">
+            <span><span>c imaginary</span><output id="cy-value">0.113</output></span>
+            <input id="cy-input" type="range" min="-0.8" max="0.8" step="0.001" value="0.113" />
+          </label>
+          <label class="range-control">
+            <span><span>zoom field</span><output id="zoom-value">1.20x</output></span>
+            <input id="zoom-input" type="range" min="0.65" max="3.4" step="0.01" value="1.2" />
+          </label>
+          <label class="range-control">
+            <span><span>iteration depth</span><output id="iter-value">96</output></span>
+            <input id="iter-input" type="range" min="32" max="192" step="1" value="96" />
+          </label>
+        </section>
+
+        <section class="control-section palette-section">
+          <div class="section-title"><span>Chromatic drift</span><span class="section-code">PALETTE</span></div>
+          <div class="palette-picker" role="group" aria-label="调色板">
+            <button class="palette-swatch is-active" data-palette="0" aria-label="荧光珊瑚调色板"><span></span></button>
+            <button class="palette-swatch" data-palette="1" aria-label="深海青调色板"><span></span></button>
+            <button class="palette-swatch" data-palette="2" aria-label="紫晶调色板"><span></span></button>
+            <button class="palette-swatch" data-palette="3" aria-label="日落调色板"><span></span></button>
+          </div>
+        </section>
+
+        <section class="control-section preset-section">
+          <div class="section-title"><span>Genome presets</span><span class="section-code">SAMPLES</span></div>
+          <div class="preset-list" role="group" aria-label="Genome presets">
+            <button class="preset-button is-active" data-preset="coral-reef">
+              <span class="preset-name">Coral reef</span><span class="preset-description">cyan bloom</span>
+            </button>
+            <button class="preset-button" data-preset="kelp-current">
+              <span class="preset-name">Kelp current</span><span class="preset-description">deep blue</span>
+            </button>
+            <button class="preset-button" data-preset="violet-tide">
+              <span class="preset-name">Violet tide</span><span class="preset-description">dense detail</span>
+            </button>
+            <button class="preset-button" data-preset="ember-reef">
+              <span class="preset-name">Ember reef</span><span class="preset-description">warm night</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="control-section filter-section">
+          <div class="section-title"><span>Pixel treatment</span><span class="section-code">OUTPUT</span></div>
+          <label class="toggle-control"><span>Ordered dither</span><input id="dither-input" type="checkbox" checked /><i></i></label>
+          <label class="toggle-control"><span>CRT scanlines</span><input id="scanline-input" type="checkbox" checked /><i></i></label>
+          <label class="toggle-control"><span>Chromatic aberration</span><input id="aberration-input" type="checkbox" checked /><i></i></label>
+          <label class="toggle-control"><span>CRT curvature</span><input id="curvature-input" type="checkbox" checked /><i></i></label>
+          <label class="toggle-control"><span>Event audio</span><input id="audio-input" type="checkbox" checked /><i></i></label>
+          <label class="range-control compact-range">
+            <span><span>filter intensity</span><output id="filter-value">72%</output></span>
+            <input id="filter-input" type="range" min="0" max="100" step="1" value="72" />
+          </label>
+          <label class="range-control compact-range">
+            <span><span>pixel density</span><output id="pixel-value">28%</output></span>
+            <input id="pixel-input" type="range" min="18" max="55" step="1" value="28" />
+          </label>
+        </section>
+
+        <div class="panel-actions">
+          <button id="pause-button" class="action-button action-button-primary" aria-keyshortcuts="Space" aria-pressed="false">Pause simulation</button>
+          <button id="reset-button" class="action-button" aria-keyshortcuts="R">Reset genome</button>
+        </div>
+        <p class="panel-note">M0 technical preview <span>·</span> parameters are local to this session</p>
+      </aside>
+
+      <div class="bottom-readout">
+        <span class="bottom-label">FIELD ACTIVITY</span>
+        <div class="activity-bar"><span id="activity-bar-fill"></span></div>
+        <span id="activity-value">0.72</span>
+        <span class="bottom-divider"></span>
+        <span class="bottom-label">SPECIMENS</span>
+        <span id="specimen-value">48</span>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
